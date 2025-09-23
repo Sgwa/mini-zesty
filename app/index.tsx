@@ -1,6 +1,14 @@
 import { Text, View } from "react-native";
+import useTickerStore from "store/tickerStore";
 
-export default function Index() {
+const Index = () => {
+  const { history, tickerData } = useTickerStore(state => ({
+    history: state.history,
+    tickerData: state.tickerData,
+  }));
+
+  console.log(tickerData.at(-1));
+
   return (
     <View
       style={{
@@ -12,4 +20,6 @@ export default function Index() {
       <Text>Edit app/index.tsx to edit this screen.</Text>
     </View>
   );
-}
+};
+
+export default Index;

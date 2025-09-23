@@ -9,7 +9,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.mini-zesty",
+      "appleTeamId": "98RP8EHNA8"
     },
     "android": {
       "adaptiveIcon": {
