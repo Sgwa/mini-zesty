@@ -4,15 +4,21 @@ import shallow from "utils/store";
 
 interface ScrollState {
   history: History | undefined;
-  tickerData: Tick[];
+  tickerData: Record<string, Tick[]> | undefined;
   addTicker: (val: Tick) => void;
   setHistory: (val: History) => void;
 }
 
 const useTickerStore = create<ScrollState>(set => ({
   history: undefined,
-  tickerData: [],
-  addTicker: val => set(state => ({ tickerData: [...state.tickerData, val] })),
+  tickerData: undefined,
+  addTicker: val =>
+    set(state => {
+      const data = state.tickerData ? { ...state.tickerData } : {};
+      const prev = data[val.ticker] ?? [];
+      data[val.ticker] = [...prev, val];
+      return { tickerData: data };
+    }),
   setHistory: val => set(() => ({ history: val })),
 }));
 
