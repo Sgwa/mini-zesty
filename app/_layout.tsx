@@ -1,13 +1,13 @@
 import { Stack } from "expo-router";
 import TickerWebSocketHandler from "templates/TickerWebSocketHandler";
+import GlobalProviders from "GlobalProviders";
 
 const RootLayout = () => {
-  console.log("holaa layout");
   return (
-    <>
+    <GlobalProviders>
       <TickerWebSocketHandler />
       <Stack />
-    </>
+    </GlobalProviders>
   );
 };
 
