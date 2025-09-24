@@ -1,6 +1,7 @@
 import RestyleProvider from "components/particles/RestyleProvider";
 import { FC } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 interface Props {
   children: React.ReactNode;
@@ -8,9 +9,11 @@ interface Props {
 
 const GlobalProviders: FC<Props> = ({ children }) => {
   return (
-    <RestyleProvider>
-      <SafeAreaProvider>{children}</SafeAreaProvider>
-    </RestyleProvider>
+    <GestureHandlerRootView>
+      <RestyleProvider>
+        <SafeAreaProvider>{children}</SafeAreaProvider>
+      </RestyleProvider>
+    </GestureHandlerRootView>
   );
 };
 

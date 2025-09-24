@@ -5,7 +5,7 @@ export interface Tick {
   ts: number;
 }
 
-interface DayData {
+export interface DayData {
   date: string;
   open: number;
   high: number;
