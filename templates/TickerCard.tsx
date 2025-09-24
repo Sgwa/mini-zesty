@@ -12,8 +12,10 @@ interface Props {
 }
 
 const TickerCard = ({ position }: Props) => {
-  const tickerData = useTickerStore(state => state.tickerData?.[position.symbol]?.at(-1));
-  const history = useTickerStore(state => state.history);
+  const { tickerData, history } = useTickerStore(state => ({
+    tickerData: state.tickerData?.[position.symbol]?.at(-1),
+    history: state.history,
+  }));
   const ticketHistory = history?.data?.[position.symbol];
   const ticketPriceYesterday = ticketHistory?.at(-2)?.close;
   if (!tickerData || !ticketPriceYesterday) return null;
@@ -33,9 +35,20 @@ const TickerCard = ({ position }: Props) => {
     >
       <Box>
         <Text variant="h4">{tickerCompanyName[position.symbol]}</Text>
-        <Text variant="h5R">{position.symbol}</Text>
+        <Text variant="h5R">
+          {position.symbol} | US${tickerData.price}
+        </Text>
+        <Text variant="h5R" color="gray20">
+          P&L Hoy
+        </Text>
+        <Text variant="h5R" color="primary">
+          Precio promedio
+        </Text>
       </Box>
       <Box alignItems="flex-end">
+        <Text variant="h5R" color="black">
+          {position.symbol} {position.qty.toFixed(2)}
+        </Text>
         <Text variant="h4" color="black">
           US${(tickerData.price * position.qty).toFixed(2)}
         </Text>
@@ -46,9 +59,14 @@ const TickerCard = ({ position }: Props) => {
             <ArrowUpSvg height={17} width={17} color={colors.green} />
           )}
           <Text variant="h5" color={changeAbs < 0 ? "red" : "green"}>
-            {changeAbs.toFixed(2)} [{changePercent.toFixed(2)}%]
+            {changeAbs > 0 && "+"}
+            {changeAbs.toFixed(2)} [{changeAbs > 0 && "+"}
+            {changePercent.toFixed(2)}%]
           </Text>
         </Box>
+        <Text variant="h5R" color="primary">
+          US${position.avgPrice.toFixed(2)}
+        </Text>
       </Box>
     </Pressable>
   );
