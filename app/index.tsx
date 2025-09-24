@@ -1,24 +1,15 @@
-import useTickerStore from "store/tickerStore";
-import { Screen, Text } from "components/particles";
-import { Graph } from "components/molecules";
-import { tickerCompanyName } from "resources/constants";
+import { Screen } from "components/particles";
+import { useGetPortfolio } from "hooks/api/portfolio";
+import TickerCard from "templates/TickerCard";
 
 const Index = () => {
-  const aaplData = useTickerStore(state => state.tickerData?.AAPL?.at(-1));
-  const history = useTickerStore(state => state.history);
+  const { data } = useGetPortfolio();
 
   return (
-    <Screen flex={1} padding="l">
-      <Text variant="h4R" color="gray20">
-        AAPL
-      </Text>
-      <Text variant="h2" color="black">
-        {tickerCompanyName["AAPL"]}
-      </Text>
-      <Text variant="h1R" color="green">
-        US${aaplData?.price}
-      </Text>
-      <Graph ticker="AAPL" history={history} />
+    <Screen flex={1} padding="l" gap="m">
+      {data?.positions.map(position => (
+        <TickerCard key={position.symbol} position={position} />
+      ))}
     </Screen>
   );
 };
