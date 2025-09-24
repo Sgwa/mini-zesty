@@ -16,13 +16,12 @@ import {
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import colors from "styles/colors";
-import { History } from "store/types";
+import { DayData } from "store/types";
 import { getIntersection, getPath } from "components/molecules/Graph/utils";
 import { GroupButtons } from "components/atoms";
 
 interface Props {
-  ticker: string;
-  history: History | undefined;
+  tickerHData: DayData[] | undefined;
   height?: number;
   width?: number;
 }
@@ -31,7 +30,7 @@ const PRICE_Y_OFFSET = 50;
 const TEMPORALITY = ["1D", "1S", "1M", "2M"];
 const TEMP_LENGTHS = [2, 8, 31, 60];
 
-const Graph = ({ ticker, history, width: w, height: h }: Props) => {
+const Graph = ({ tickerHData, width: w, height: h }: Props) => {
   const [tempIdx, setTempIdx] = useState(3);
   const opacity = useSharedValue(0);
   const { width: windowWidth } = useWindowDimensions();
@@ -39,11 +38,10 @@ const Graph = ({ ticker, history, width: w, height: h }: Props) => {
   const height = h || windowWidth * 0.6;
 
   const getData = useCallback(() => {
-    const tickerData = history?.data?.[ticker];
-    if (tickerData === undefined) return [];
-    const slice = [tickerData.length - TEMP_LENGTHS[tempIdx], undefined];
-    return tickerData.slice(slice[0], slice[1]) ?? [];
-  }, [history?.data, tempIdx, ticker]);
+    if (tickerHData === undefined) return [];
+    const slice = [tickerHData.length - TEMP_LENGTHS[tempIdx], undefined];
+    return tickerHData.slice(slice[0], slice[1]) ?? [];
+  }, [tempIdx, tickerHData]);
 
   const touchX = useSharedValue(0);
   const touchY = useSharedValue(0);
@@ -71,14 +69,21 @@ const Graph = ({ ticker, history, width: w, height: h }: Props) => {
   const marker = useDerivedValue(() => getIntersection({ pathPoints, touchX }));
   const fontDate = matchFont(fontDateStyle);
   const fontPrice = matchFont(fontPriceStyle);
-  const textM = useDerivedValue(() => ({
-    ...fontDate.measureText(String(marker.value.date)),
-    ...fontDate.getMetrics(),
-  }));
+  const textM = useDerivedValue(() => {
+    const textDateM = fontDate.measureText(String(marker.value.date));
+    const textPriceM = fontPrice.measureText(String(marker.value.price));
+    return {
+      ...{
+        ...textDateM,
+        width: textPriceM.width > textDateM.width ? textPriceM.width : textDateM.width,
+      },
+      ...fontDate.getMetrics(),
+    };
+  });
 
   const markerX = useDerivedValue(() => marker.value.x);
   const markerY = useDerivedValue(() => marker.value.y);
-  const markerPrice = useDerivedValue(() => String(marker.value.price));
+  const markerPrice = useDerivedValue(() => marker.value.price);
   const markerDate = useDerivedValue(() => marker.value.date);
   const lineP1 = useDerivedValue(() => ({ x: marker.value.x, y: 0 }));
   const lineP2 = useDerivedValue(() => ({ x: marker.value.x, y: height }));

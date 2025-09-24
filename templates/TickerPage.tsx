@@ -10,6 +10,7 @@ interface Props {
 const TickerPage = ({ tickerSymbol }: Props) => {
   const tickerData = useTickerStore(state => state.tickerData?.[tickerSymbol]?.at(-1));
   const history = useTickerStore(state => state.history);
+  const tickerHData = history?.data?.[tickerSymbol];
 
   return (
     <>
@@ -22,7 +23,7 @@ const TickerPage = ({ tickerSymbol }: Props) => {
       <Text variant="h1R" color="green">
         US${tickerData?.price}
       </Text>
-      <Graph ticker={tickerSymbol} history={history} />
+      <Graph tickerHData={tickerHData} />
     </>
   );
 };

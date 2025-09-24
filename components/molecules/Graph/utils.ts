@@ -66,16 +66,21 @@ export const getIntersection = ({ pathPoints, touchX }: GetIntersectionProps) =>
   "worklet";
   const { xCoords, yCoords, prices, dates } = pathPoints.value;
   const xLength = xCoords.length;
-  if (!xLength) return { x: 0, y: 0, price: 0, date: "" };
+  if (!xLength) return { x: 0, y: 0, price: "US$" + 0, date: "" };
   const currentX = touchX.value;
 
   if (currentX <= xCoords[0])
-    return { x: xCoords[0], y: yCoords[0], price: prices[0], date: dates[0] };
+    return {
+      x: xCoords[0],
+      y: yCoords[0],
+      price: "US$" + prices[0].toFixed(2),
+      date: dates[0],
+    };
   if (currentX >= xCoords[xLength - 1])
     return {
       x: xCoords[xLength - 1],
       y: yCoords[xLength - 1],
-      price: prices[xLength - 1],
+      price: "US$" + prices[xLength - 1],
       date: dates[xLength - 1],
     };
 
@@ -89,7 +94,7 @@ export const getIntersection = ({ pathPoints, touchX }: GetIntersectionProps) =>
 
   const x = xCoords[lo];
   const y = yCoords[lo];
-  const price = "US$" + prices[lo];
+  const price = "US$" + prices[lo].toFixed(2);
   const date = dates[lo];
   return { x, y, price, date };
 };
