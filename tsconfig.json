@@ -11,7 +11,9 @@
       "store/*": ["store/*"],
       "styles/*": ["styles/*"],
       "templates/*": ["templates/*"],
-      "utils/*": ["utils/*"]
+      "utils/*": ["utils/*"],
+      "config/*": ["config/*"],
+      "services/*": ["services/*"],
     }
   },
   "exclude": [
