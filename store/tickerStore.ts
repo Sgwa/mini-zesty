@@ -2,24 +2,47 @@ import { create } from "zustand";
 import { Tick, History } from "store/types";
 import shallow from "utils/store";
 
-interface ScrollState {
+interface TickerState {
   history: History | undefined;
-  tickerData: Record<string, Tick[]> | undefined;
+  tickerDataLive: Record<string, Tick[]>;
+  tickerData: Record<string, Tick[]>;
   addTicker: (val: Tick) => void;
   setHistory: (val: History) => void;
+  startTickerPump: (ms?: number) => void;
+  stopTickerPump: () => void;
+  _pumpId?: number;
 }
 
-const useTickerStore = create<ScrollState>(set => ({
+const useTickerStore = create<TickerState>((set, get) => ({
   history: undefined,
-  tickerData: undefined,
+  tickerDataLive: {},
+  tickerData: {},
   addTicker: val =>
     set(state => {
-      const data = state.tickerData ? { ...state.tickerData } : {};
-      const prev = data[val.ticker] ?? [];
-      data[val.ticker] = [...prev, val];
-      return { tickerData: data };
+      const live = state.tickerDataLive;
+      const prev = live[val.ticker] ?? [];
+      const next = { ...live, [val.ticker]: [...prev, val] };
+      return { tickerDataLive: next };
     }),
   setHistory: val => set(() => ({ history: val })),
+  startTickerPump: (ms = 1200) => {
+    const { _pumpId } = get();
+    if (_pumpId) return;
+    const pump = () => {
+      const { tickerDataLive, tickerData } = get();
+      if (tickerData !== tickerDataLive) {
+        set({ tickerData: tickerDataLive });
+      }
+      const id = setTimeout(pump, ms);
+      set({ _pumpId: id });
+    };
+    pump();
+  },
+  stopTickerPump: () => {
+    const id = get()._pumpId;
+    if (id) clearTimeout(id);
+    set({ _pumpId: undefined });
+  },
 }));
 
 export default shallow(useTickerStore);

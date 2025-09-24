@@ -10,6 +10,12 @@ const useTickerWebSocket = () => {
   }));
 
   useEffect(() => {
+    const tickerState = useTickerStore.getState();
+    tickerState.startTickerPump();
+    return () => tickerState.stopTickerPump();
+  }, []);
+
+  useEffect(() => {
     const ws = new WebSocket(WS_URL);
 
     ws.onmessage = event => {
