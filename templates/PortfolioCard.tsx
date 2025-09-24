@@ -4,6 +4,7 @@ import useTickerStore from "store/tickerStore";
 import ArrowDownSvg from "assets/svgs/arrow-down.svg";
 import ArrowUpSvg from "assets/svgs/arrow-up.svg";
 import colors from "styles/colors";
+import TickerCardSkeleton from "templates/TickerCard/Skeleton";
 
 interface Props {
   portfolio: Portfolio;
@@ -41,6 +42,12 @@ const PortfolioCard = ({ portfolio }: Props) => {
   const totalChangeAbs = totalCurrentPrice - averagePrice;
   const totalChangePercent = (totalChangeAbs / averagePrice) * 100;
   if (portfolio.positions.length === 0) return null;
+  if (totalCurrentPrice.toFixed(2) == "0.00")
+    return (
+      <Box borderWidth={2} borderColor="primary" borderRadius={8} paddingHorizontal="s">
+        <TickerCardSkeleton />
+      </Box>
+    );
 
   return (
     <Box
