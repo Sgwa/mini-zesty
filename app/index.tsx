@@ -11,8 +11,8 @@ const Index = () => {
   if (!portfolio) return null;
   return (
     <Screen flex={1} padding="l" gap="m">
-      <PortfolioGraph portfolio={portfolio} />
       <PortfolioCard portfolio={portfolio} />
+      <PortfolioGraph portfolio={portfolio} />
       <Text variant="h2">Tus stocks</Text>
       <FlatList
         data={portfolio.positions}

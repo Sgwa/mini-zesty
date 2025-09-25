@@ -8,7 +8,7 @@ const BackHeader = () => {
     router.canGoBack() ? router.back() : router.replace("/");
 
   return (
-    <Box flexDirection="row" paddingHorizontal="m">
+    <Box flexDirection="row" paddingHorizontal="m" paddingVertical="s">
       <Pressable onPress={onPressBackHeader} accessibilityLabel="back-header">
         <ArrowBackSvg width={30} height={30} color={colors.primary} />
       </Pressable>

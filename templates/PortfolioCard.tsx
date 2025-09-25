@@ -59,7 +59,7 @@ const PortfolioCard = ({ portfolio }: Props) => {
       padding="s"
     >
       <Box>
-        <Text variant="h2">Portfolio</Text>
+        <Text variant="h2">Portafolio</Text>
         <Text variant="h3R">Total</Text>
         <Text variant="h4R" color="black">
           P&L Total

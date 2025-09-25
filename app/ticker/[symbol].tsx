@@ -9,7 +9,7 @@ const TickerScreen = () => {
   return (
     <Screen flex={1}>
       <BackHeader />
-      <Box padding="l">
+      <Box paddingHorizontal="l">
         <TickerPage tickerSymbol={symbol} />
       </Box>
     </Screen>
