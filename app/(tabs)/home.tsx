@@ -1,6 +1,6 @@
 import { Screen, Text } from "components/particles";
 import { useGetPortfolio } from "hooks/api/portfolio";
-import TickerCard from "templates/TickerCard";
+import PositionCard from "templates/PositionCard";
 import PortfolioCard from "templates/PortfolioCard";
 import PortfolioGraph from "templates/PortfolioGraph";
 import { FlatList } from "react-native";
@@ -17,7 +17,7 @@ const Index = () => {
       <FlatList
         data={portfolio.positions}
         keyExtractor={item => item.symbol}
-        renderItem={({ item }) => <TickerCard position={item} />}
+        renderItem={({ item }) => <PositionCard position={item} />}
         showsVerticalScrollIndicator={false}
       />
     </Screen>
