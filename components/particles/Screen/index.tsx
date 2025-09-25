@@ -10,7 +10,7 @@ interface Props extends ComponentProps<typeof SafeAreaView> {
 const Screen: FC<Props> = ({ children, safeAreaDisabled = false, ...props }) => {
   const navigation = useNavigation();
   useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false }); // Hide default expo router header
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
   const View = useMemo(() => (safeAreaDisabled ? Box : SafeAreaView), [safeAreaDisabled]);
   return (
