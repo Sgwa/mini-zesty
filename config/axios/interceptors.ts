@@ -8,18 +8,18 @@ const getCredentials = async () => {
   return "mock_access_token";
 };
 
-function getPath(config: InternalAxiosRequestConfig) {
+const getPath = (config: InternalAxiosRequestConfig) => {
   const u = config.url ?? "";
   try {
     return new URL(u, config.baseURL ?? "http://d").pathname;
   } catch {
     return u;
   }
-}
+};
 
-async function mockPortfolioCall(
+const mockPortfolioCall = async (
   config: InternalAxiosRequestConfig,
-): Promise<AxiosResponse | null> {
+): Promise<AxiosResponse | null> => {
   const path = getPath(config);
   const method = (config.method ?? "get").toUpperCase();
 
@@ -42,7 +42,7 @@ async function mockPortfolioCall(
     };
   }
   return null;
-}
+};
 
 export const request = async (
   config: InternalAxiosRequestConfig,

@@ -133,7 +133,7 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
     const aa = Math.round(a * 255)
       .toString(16)
       .padStart(2, "0");
-    return `#${h}${aa}`; // #RRGGBBAA
+    return `#${h}${aa}`;
   };
 
   const negativeChange = yCoords[0] < yCoords[yCoords.length - 1];

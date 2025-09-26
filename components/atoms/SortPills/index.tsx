@@ -2,18 +2,20 @@ import { Box, Pressable, ScrollView, Text } from "components/particles";
 import { Ionicons } from "@expo/vector-icons";
 import colors from "styles/colors";
 import { SortBy, sortByText, SortOrder } from "resources/constants";
+import { BoxRestyleProps } from "styles/types";
+import { RTheme } from "styles/restyleTheme";
 
-interface Props {
+interface Props extends BoxRestyleProps<RTheme> {
   items: SortBy[];
   by: SortBy;
   order: SortOrder;
   onChange: (idx: number) => void;
 }
 
-const SortPills = ({ items, by, order, onChange }: Props) => {
+const SortPills = ({ items, by, order, onChange, ...props }: Props) => {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <Box flexDirection="row" gap="s">
+      <Box flexDirection="row" gap="s" {...props}>
         {items.map((label, idx) => (
           <Pressable key={label} flex={1} onPress={() => onChange(idx)}>
             <Box

@@ -24,6 +24,7 @@ module.exports = function (api) {
           },
         },
       ],
+      'react-native-paper/babel',
       'react-native-worklets/plugin',
     ],
   };

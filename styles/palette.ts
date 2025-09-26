@@ -9,6 +9,7 @@ const palette = {
     black: "#000000",
     white: "#FFFFFF",
   },
+  transparent: "#00000000",
 };
 
 export default palette;

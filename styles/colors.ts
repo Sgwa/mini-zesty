@@ -9,6 +9,7 @@ const colors = {
   gray20: palette.grayscale[20],
   black: palette.grayscale.black,
   white: palette.grayscale.white,
+  transparent: palette.transparent,
 };
 
 export default colors;

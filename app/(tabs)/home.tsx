@@ -10,7 +10,7 @@ const Index = () => {
 
   if (!portfolio) return null;
   return (
-    <Screen flex={1} padding="l" paddingBottom="none" gap="m">
+    <Screen flex={1} paddingHorizontal="l" paddingTop="m" paddingBottom="none" gap="m">
       <PortfolioCard portfolio={portfolio} />
       <PortfolioGraph portfolio={portfolio} />
       <Text variant="h2">Tus stocks</Text>

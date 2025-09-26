@@ -50,7 +50,7 @@ const TickerCard = ({ tickerSymbol }: Props) => {
         <Text variant="h4">{tickerCompanyName[tickerSymbol]}</Text>
         <Text variant="h5R">{tickerSymbol}</Text>
         {position && (
-          <Text variant="h5R" color="black">
+          <Text variant="h5R" color="gray20">
             % de tu portafolio
           </Text>
         )}
@@ -72,7 +72,7 @@ const TickerCard = ({ tickerSymbol }: Props) => {
           </Text>
         </Box>
         {position && (
-          <Text variant="h5R" color="black">
+          <Text variant="h5" color="primary">
             {(portfolioPercent * 100).toFixed(2)}%
           </Text>
         )}
