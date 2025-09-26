@@ -20,3 +20,22 @@ export const tickerCompanyName = {
   BA: "The Boeing Company",
   JNJ: "Johnson & Johnson",
 } as const;
+
+export enum SortBy {
+  PERCENTAGE = "percentage",
+  PORTFOLIO = "portfolio",
+  PRICE = "price",
+  PNL = "p&l",
+}
+
+export const sortByText: Record<SortBy, string> = {
+  [SortBy.PNL]: "Ganancia/Pérdida",
+  [SortBy.PERCENTAGE]: "Porcentaje",
+  [SortBy.PRICE]: "Precio",
+  [SortBy.PORTFOLIO]: "Portafolio %",
+};
+
+export enum SortOrder {
+  ASC = "asc",
+  DESC = "desc",
+}

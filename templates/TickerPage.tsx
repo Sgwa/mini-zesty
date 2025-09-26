@@ -16,8 +16,8 @@ const TickerPage = ({ tickerSymbol }: Props) => {
   const position = portfolio?.positions.find(pos => pos.symbol === tickerSymbol);
   const tickerData = useTickerStore(state => state.tickerData?.[tickerSymbol]?.at(-1));
   const history = useTickerStore(state => state.history);
-  const tickerHData = history?.data?.[tickerSymbol];
-  const ticketPriceYesterday = tickerHData?.at(-2)?.close;
+  const ticketHistory = history?.data?.[tickerSymbol];
+  const ticketPriceYesterday = ticketHistory?.at(-2)?.close;
   if (!tickerData || !ticketPriceYesterday) return null;
   const changeAbs = tickerData.price - ticketPriceYesterday;
   const changePercent = (changeAbs / ticketPriceYesterday) * 100;
@@ -57,7 +57,7 @@ const TickerPage = ({ tickerSymbol }: Props) => {
             {changePercent.toFixed(2)}%]
           </Text>
         </Box>
-        <Graph tickerHData={tickerHData} />
+        <Graph tickerHData={ticketHistory} />
       </Box>
       {position && (
         <Box gap="s">

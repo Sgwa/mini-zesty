@@ -80,7 +80,7 @@ export const getIntersection = ({ pathPoints, touchX }: GetIntersectionProps) =>
     return {
       x: xCoords[xLength - 1],
       y: yCoords[xLength - 1],
-      price: "US$" + prices[xLength - 1],
+      price: "US$" + prices[xLength - 1].toFixed(2),
       date: dates[xLength - 1],
     };
 

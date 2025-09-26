@@ -7,21 +7,33 @@ import ArrowUpSvg from "assets/svgs/arrow-up.svg";
 import colors from "styles/colors";
 import { memo } from "react";
 import PositionCardSkeleton from "templates/PositionCard/Skeleton";
+import { useGetPortfolio } from "hooks/api/portfolio";
 
 interface Props {
-  symbol: keyof typeof tickerCompanyName;
+  tickerSymbol: keyof typeof tickerCompanyName;
 }
 
-const PositionCard = ({ symbol }: Props) => {
-  const { tickerData, history } = useTickerStore(state => ({
-    tickerData: state.tickerData?.[symbol]?.at(-1),
-    history: state.history,
-  }));
-  const ticketHistory = history?.data?.[symbol];
+const TickerCard = ({ tickerSymbol }: Props) => {
+  const { data: portfolio } = useGetPortfolio();
+  const position = portfolio?.positions.find(pos => pos.symbol === tickerSymbol);
+  const tickerData = useTickerStore(state => state.tickerData?.[tickerSymbol]?.at(-1));
+  const history = useTickerStore(state => state.history);
+  const ticketHistory = history?.data?.[tickerSymbol];
   const ticketPriceYesterday = ticketHistory?.at(-2)?.close;
   if (!tickerData || !ticketPriceYesterday) return <PositionCardSkeleton />;
   const changeAbs = tickerData.price - ticketPriceYesterday;
   const changePercent = (changeAbs / ticketPriceYesterday) * 100;
+  const portfolioPercent =
+    position && portfolio
+      ? (tickerData.price * position.qty) /
+        portfolio.positions.reduce((acc, pos) => {
+          const posTickerData = useTickerStore
+            .getState()
+            .tickerData?.[pos.symbol]?.at(-1);
+          if (!posTickerData) return acc;
+          return acc + posTickerData.price * pos.qty;
+        }, 0)
+      : 0;
 
   return (
     <Pressable
@@ -31,12 +43,17 @@ const PositionCard = ({ symbol }: Props) => {
       borderColor="gray10"
       paddingVertical="m"
       onPress={() => {
-        router.push(`ticker/${symbol}`);
+        router.push(`ticker/${tickerSymbol}`);
       }}
     >
       <Box flex={1} minWidth={0}>
-        <Text variant="h4">{tickerCompanyName[symbol]}</Text>
-        <Text variant="h5R">{symbol}</Text>
+        <Text variant="h4">{tickerCompanyName[tickerSymbol]}</Text>
+        <Text variant="h5R">{tickerSymbol}</Text>
+        {position && (
+          <Text variant="h5R" color="black">
+            % de tu portafolio
+          </Text>
+        )}
       </Box>
       <Box alignItems="flex-end" flexShrink={0}>
         <Text variant="h4" color="black">
@@ -54,9 +71,14 @@ const PositionCard = ({ symbol }: Props) => {
             {changePercent.toFixed(2)}%]
           </Text>
         </Box>
+        {position && (
+          <Text variant="h5R" color="black">
+            {(portfolioPercent * 100).toFixed(2)}%
+          </Text>
+        )}
       </Box>
     </Pressable>
   );
 };
 
-export default memo(PositionCard);
+export default memo(TickerCard);
