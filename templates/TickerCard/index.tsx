@@ -1,40 +1,21 @@
 import { Box, Pressable, Text } from "components/particles";
 import { tickerCompanyName } from "resources/constants";
-import useTickerStore from "store/tickerStore";
 import { router } from "expo-router";
 import ArrowDownSvg from "assets/svgs/arrow-down.svg";
 import ArrowUpSvg from "assets/svgs/arrow-up.svg";
 import colors from "styles/colors";
 import { memo } from "react";
-import PositionCardSkeleton from "templates/PositionCard/Skeleton";
-import { useGetPortfolio } from "hooks/api/portfolio";
-import S from "../../i18n";
+import S from "i18n";
+import useTickerData from "hooks/useTickerData";
 
 interface Props {
   tickerSymbol: keyof typeof tickerCompanyName;
 }
 
 const TickerCard = ({ tickerSymbol }: Props) => {
-  const { data: portfolio } = useGetPortfolio();
-  const position = portfolio?.positions.find(pos => pos.symbol === tickerSymbol);
-  const tickerData = useTickerStore(state => state.tickerData?.[tickerSymbol]?.at(-1));
-  const history = useTickerStore(state => state.history);
-  const ticketHistory = history?.data?.[tickerSymbol];
-  const ticketPriceYesterday = ticketHistory?.at(-2)?.close;
-  if (!tickerData || !ticketPriceYesterday) return <PositionCardSkeleton />;
-  const changeAbs = tickerData.price - ticketPriceYesterday;
-  const changePercent = (changeAbs / ticketPriceYesterday) * 100;
-  const portfolioPercent =
-    position && portfolio
-      ? (tickerData.price * position.qty) /
-        portfolio.positions.reduce((acc, pos) => {
-          const posTickerData = useTickerStore
-            .getState()
-            .tickerData?.[pos.symbol]?.at(-1);
-          if (!posTickerData) return acc;
-          return acc + posTickerData.price * pos.qty;
-        }, 0)
-      : 0;
+  const { tickerData, changeAbs, changePercent, positionsQty, portfolioPercent } =
+    useTickerData({ tickerSymbol });
+  if (!changeAbs || !changePercent) return null;
 
   return (
     <Pressable
@@ -50,7 +31,7 @@ const TickerCard = ({ tickerSymbol }: Props) => {
       <Box flex={1} minWidth={0}>
         <Text variant="h4">{tickerCompanyName[tickerSymbol]}</Text>
         <Text variant="h5R">{tickerSymbol}</Text>
-        {position && (
+        {!!positionsQty && (
           <Text variant="h5R" color="gray20">
             {S.ticker.position.portfolio_percentage}
           </Text>
@@ -72,7 +53,7 @@ const TickerCard = ({ tickerSymbol }: Props) => {
             {changePercent.toFixed(2)}%]
           </Text>
         </Box>
-        {position && (
+        {!!positionsQty && (
           <Text variant="h5" color="primary">
             {(portfolioPercent * 100).toFixed(2)}%
           </Text>

@@ -8,17 +8,18 @@ import S from "i18n";
 
 const Index = () => {
   const { data: portfolio } = useGetPortfolio();
-
   if (!portfolio) return null;
+  const symbols = [...new Set(portfolio.positions.map(position => position.symbol))];
+
   return (
     <Screen flex={1} paddingHorizontal="l" paddingTop="m" paddingBottom="none" gap="m">
       <PortfolioCard portfolio={portfolio} />
       <PortfolioGraph portfolio={portfolio} />
       <Text variant="h2">{S.home.your_stocks_title}</Text>
       <FlatList
-        data={portfolio.positions}
-        keyExtractor={item => item.symbol}
-        renderItem={({ item }) => <PositionCard position={item} />}
+        data={symbols}
+        keyExtractor={item => item}
+        renderItem={({ item }) => <PositionCard symbol={item} />}
         showsVerticalScrollIndicator={false}
       />
     </Screen>

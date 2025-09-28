@@ -34,14 +34,14 @@ const PortfolioCard = ({ portfolio }: Props) => {
   const totalDayChangeAbs = dayChangesAbs.reduce((a, b) => a + b, 0);
   const totalDayChangePercent = (totalDayChangeAbs / totalTicketPriceYesterday) * 100;
 
-  const averagePrice = portfolio.positions
-    .map(position => position.avgPrice * position.qty)
+  const buyPriceSum = portfolio.positions
+    .map(position => position.buyPrice * position.qty)
     .reduce((a, b) => a + b, 0);
   const totalCurrentPrice = tickerData
     .map((ticker, index) => ticker.price * portfolio.positions[index].qty)
     .reduce((a, b) => a + b, 0);
-  const totalChangeAbs = totalCurrentPrice - averagePrice;
-  const totalChangePercent = (totalChangeAbs / averagePrice) * 100;
+  const totalChangeAbs = totalCurrentPrice - buyPriceSum;
+  const totalChangePercent = (totalChangeAbs / buyPriceSum) * 100;
   if (portfolio.positions.length === 0) return null;
   if (totalCurrentPrice.toFixed(2) == "0.00")
     return (
@@ -66,7 +66,7 @@ const PortfolioCard = ({ portfolio }: Props) => {
           {S.ticker.pl_total}
         </Text>
         <Text variant="h5R" color="gray20">
-          {S.ticker.pl_today}
+          {S.ticker.pl_today}k
         </Text>
       </Box>
       <Box alignItems="flex-end">

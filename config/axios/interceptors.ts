@@ -1,4 +1,5 @@
 import { AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { portfolioMockData } from "utils/mock";
 
 const DELAY_MS = 350;
 
@@ -24,22 +25,7 @@ const mockPortfolioCall = async (
   const method = (config.method ?? "get").toUpperCase();
 
   if (method === "GET" && path === "/v1/portfolio") {
-    return {
-      data: {
-        cash: 1500.0,
-        positions: [
-          { symbol: "AAPL", qty: 10, avgPrice: 100 },
-          { symbol: "NVDA", qty: 5, avgPrice: 400 },
-          { symbol: "TSLA", qty: 2, avgPrice: 210 },
-        ],
-        updatedAt: Date.now(),
-      },
-      status: 200,
-      statusText: "OK",
-      headers: {},
-      config,
-      request: {},
-    };
+    return portfolioMockData({ config });
   }
   return null;
 };

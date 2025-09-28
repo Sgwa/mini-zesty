@@ -3,7 +3,8 @@ import { tickerCompanyName } from "resources/constants";
 export interface Position {
   symbol: keyof typeof tickerCompanyName;
   qty: number;
-  avgPrice: number;
+  buyPrice: number;
+  date: string;
 }
 
 export interface Portfolio {
