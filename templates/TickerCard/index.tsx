@@ -8,6 +8,7 @@ import colors from "styles/colors";
 import { memo } from "react";
 import PositionCardSkeleton from "templates/PositionCard/Skeleton";
 import { useGetPortfolio } from "hooks/api/portfolio";
+import S from "../../i18n";
 
 interface Props {
   tickerSymbol: keyof typeof tickerCompanyName;
@@ -51,7 +52,7 @@ const TickerCard = ({ tickerSymbol }: Props) => {
         <Text variant="h5R">{tickerSymbol}</Text>
         {position && (
           <Text variant="h5R" color="gray20">
-            % de tu portafolio
+            {S.ticker.position.portfolio_percentage}
           </Text>
         )}
       </Box>

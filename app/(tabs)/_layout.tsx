@@ -2,6 +2,7 @@ import { Tabs, useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useLayoutEffect } from "react";
 import colors from "styles/colors";
+import S from "i18n";
 
 const TabsLayout = () => {
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
-          title: "Portafolio",
+          title: S.bottom_bar.portfolio.toString(),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="wallet" color={color} size={size} />
           ),
@@ -34,7 +35,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="search"
         options={{
-          title: "Explorar",
+          title: S.bottom_bar.explore.toString(),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" color={color} size={size} />
           ),

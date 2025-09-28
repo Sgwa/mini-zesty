@@ -8,6 +8,7 @@ import ArrowUpSvg from "assets/svgs/arrow-up.svg";
 import colors from "styles/colors";
 import { memo } from "react";
 import PositionCardSkeleton from "templates/PositionCard/Skeleton";
+import S from "i18n";
 
 interface Props {
   position: Position;
@@ -41,10 +42,10 @@ const PositionCard = ({ position }: Props) => {
           {position.symbol} | US${tickerData.price}
         </Text>
         <Text variant="h5R" color="gray20">
-          P&L Hoy
+          {S.ticker.pl_total}
         </Text>
         <Text variant="h5R" color="primary">
-          Precio promedio
+          {S.ticker.position.average_price}
         </Text>
       </Box>
       <Box alignItems="flex-end" flexShrink={0}>

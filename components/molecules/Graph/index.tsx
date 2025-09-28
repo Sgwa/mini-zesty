@@ -19,6 +19,7 @@ import colors from "styles/colors";
 import { DayData } from "store/types";
 import { getIntersection, getPath } from "components/molecules/Graph/utils";
 import { GroupButtons } from "components/atoms";
+import S from "i18n";
 
 interface Props {
   tickerHData: DayData[] | undefined;
@@ -27,7 +28,7 @@ interface Props {
 }
 
 const PRICE_Y_OFFSET = 50;
-const TEMPORALITY = ["1D", "1S", "1M", "2M"];
+const TEMPORALITY = ["1D", S.ticker.week_temp, "1M", "2M"];
 const TEMP_LENGTHS = [2, 8, 31, 60];
 
 const Graph = ({ tickerHData, width: w, height: h }: Props) => {

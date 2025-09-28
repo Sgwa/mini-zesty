@@ -1,3 +1,5 @@
+import S from "../i18n";
+
 export const tickerCompanyName = {
   AAPL: "Apple Inc",
   NVDA: "NVIDIA Corporation",
@@ -29,10 +31,10 @@ export enum SortBy {
 }
 
 export const sortByText: Record<SortBy, string> = {
-  [SortBy.PNL]: "Ganancia/Pérdida",
-  [SortBy.PERCENTAGE]: "Porcentaje",
-  [SortBy.PRICE]: "Precio",
-  [SortBy.PORTFOLIO]: "Portafolio %",
+  [SortBy.PNL]: S.filter.pl,
+  [SortBy.PERCENTAGE]: S.filter.percentage,
+  [SortBy.PRICE]: S.filter.price,
+  [SortBy.PORTFOLIO]: S.filter.portfolio,
 };
 
 export enum SortOrder {

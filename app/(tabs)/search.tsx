@@ -9,6 +9,7 @@ import colors from "styles/colors";
 import useSearchData from "hooks/useSearchData";
 import { PLRangeSlider, SortPills, SearchField } from "components/atoms";
 import usePLRangeData from "hooks/usePLRangeData";
+import S from "i18n";
 
 const Search = () => {
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.PERCENTAGE);
@@ -38,7 +39,7 @@ const Search = () => {
     <Screen flex={1} paddingHorizontal="l" paddingTop="m" paddingBottom="none">
       <Box gap="m">
         <SearchField
-          placeholder="Buscar"
+          placeholder={S.filter.search.toString()}
           textProps={{ variant: "h4R", color: "black" }}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

@@ -5,6 +5,7 @@ import ArrowDownSvg from "assets/svgs/arrow-down.svg";
 import ArrowUpSvg from "assets/svgs/arrow-up.svg";
 import colors from "styles/colors";
 import PositionCardSkeleton from "templates/PositionCard/Skeleton";
+import S from "i18n";
 
 interface Props {
   portfolio: Portfolio;
@@ -59,13 +60,13 @@ const PortfolioCard = ({ portfolio }: Props) => {
       padding="s"
     >
       <Box>
-        <Text variant="h2">Portafolio</Text>
-        <Text variant="h3R">Total</Text>
+        <Text variant="h2">{S.home.portfolio_title}</Text>
+        <Text variant="h3R">{S.ticker.total}</Text>
         <Text variant="h4R" color="black">
-          P&L Total
+          {S.ticker.pl_total}
         </Text>
         <Text variant="h5R" color="gray20">
-          P&L Hoy
+          {S.ticker.pl_today}
         </Text>
       </Box>
       <Box alignItems="flex-end">

@@ -4,6 +4,7 @@ import PositionCard from "templates/PositionCard";
 import PortfolioCard from "templates/PortfolioCard";
 import PortfolioGraph from "templates/PortfolioGraph";
 import { FlatList } from "react-native";
+import S from "i18n";
 
 const Index = () => {
   const { data: portfolio } = useGetPortfolio();
@@ -13,7 +14,7 @@ const Index = () => {
     <Screen flex={1} paddingHorizontal="l" paddingTop="m" paddingBottom="none" gap="m">
       <PortfolioCard portfolio={portfolio} />
       <PortfolioGraph portfolio={portfolio} />
-      <Text variant="h2">Tus stocks</Text>
+      <Text variant="h2">{S.home.your_stocks_title}</Text>
       <FlatList
         data={portfolio.positions}
         keyExtractor={item => item.symbol}
