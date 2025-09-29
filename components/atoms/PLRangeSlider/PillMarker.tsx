@@ -1,6 +1,6 @@
 import { Colors } from "styles/restyleTheme";
 import { Box, Text } from "components/particles";
-import React, { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 const PillMarker = ({ value, tint }: { value: number; tint: Colors }) => {
@@ -38,4 +38,4 @@ const PillMarker = ({ value, tint }: { value: number; tint: Colors }) => {
   );
 };
 
-export default PillMarker;
+export default memo(PillMarker);

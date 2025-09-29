@@ -50,7 +50,7 @@ const TickerPage = ({ tickerSymbol }: Props) => {
           </Box>
           <Graph marketData={ticketHistory} />
         </Box>
-        {positionsQty && (
+        {!!positionsQty && (
           <Box gap="s">
             <Text variant="h3">{S.ticker.position.title}</Text>
             <Box width="80%" flexDirection="row" justifyContent="space-between">

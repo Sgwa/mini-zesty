@@ -1,4 +1,4 @@
-import React from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { LayoutChangeEvent } from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { Box, LinearGradient } from "components/particles";
@@ -20,18 +20,26 @@ const PLRangeSlider = ({
   initial = [-100, 100],
   onChange,
 }: Props) => {
-  const [values, setValues] = React.useState<[number, number]>(initial);
-  const [width, setWidth] = React.useState(0);
+  const [width, setWidth] = useState(0);
 
-  const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
-  const sliderLength = Math.max(0, width);
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width | 0;
+    setWidth(prev => (prev === w ? prev : w));
+  }, []);
 
-  const onValuesChange = (vals: number[]) => {
-    const next = [vals[0], vals[1]] as [number, number];
-    setValues(next);
-    onChange?.(next[0], next[1]);
-  };
-  const zeroX = ((0 - min) / (max - min)) * sliderLength;
+  const sliderLength = width > 0 ? width : 0;
+
+  const zeroX = useMemo(() => {
+    return sliderLength * ((0 - min) / (max - min));
+  }, [sliderLength, min, max]);
+
+  const onValuesChangeFinish = useCallback(
+    (vals: number[]) => {
+      const next = [vals[0], vals[1]] as [number, number];
+      onChange?.(next[0], next[1]);
+    },
+    [onChange],
+  );
 
   return (
     <Box paddingVertical="s" position="relative" onLayout={onLayout}>
@@ -45,8 +53,9 @@ const PLRangeSlider = ({
         top={18}
         height={12}
         borderRadius={6}
+        pointerEvents="none"
       />
-      {width > 0 && (
+      {sliderLength > 0 && (
         <Box
           backgroundColor="gray20"
           borderRadius={1}
@@ -55,10 +64,11 @@ const PLRangeSlider = ({
           top={16}
           width={2}
           left={Math.max(0, Math.min(sliderLength, zeroX)) - 1}
+          pointerEvents="none"
         />
       )}
       <MultiSlider
-        values={values}
+        values={initial}
         min={min}
         max={max}
         step={step}
@@ -75,10 +85,10 @@ const PLRangeSlider = ({
         customMarkerRight={({ currentValue }) => (
           <PillMarker value={currentValue} tint="primary" />
         )}
-        onValuesChange={onValuesChange}
+        onValuesChangeFinish={onValuesChangeFinish}
       />
     </Box>
   );
 };
 
-export default PLRangeSlider;
+export default memo(PLRangeSlider);

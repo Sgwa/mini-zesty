@@ -31,6 +31,7 @@ interface Props {
 const PRICE_Y_OFFSET = 50;
 const TEMPORALITY = ["1D", S.ticker.week_temp, "1M", "2M"];
 const TEMP_LENGTHS = [2, 8, 31, 60];
+const TEXT_HEIGHT_OFFSET_MULT = Platform.OS === "android" ? 1.3 : 1.1;
 
 const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   const [tempIdx, setTempIdx] = useState(3);
@@ -93,7 +94,7 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [investedXCoords, investedYCoords]);
 
-  const fontFamily = Platform.select({ ios: "Helvetica", default: "serif" });
+  const fontFamily = "Helvetica";
   const fontDateStyle = {
     fontFamily,
     fontSize: 13,
@@ -155,9 +156,11 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
       (marker.value.y > height / 2 ? -PRICE_Y_OFFSET : PRICE_Y_OFFSET) -
       7,
   );
-  const textPriceY = useDerivedValue(() => textY.value + textM.value.height * 1.1);
+  const textPriceY = useDerivedValue(
+    () => textY.value + textM.value.height * TEXT_HEIGHT_OFFSET_MULT,
+  );
   const textInvestedY = useDerivedValue(
-    () => textPriceY.value + textM.value.height * 1.1,
+    () => textPriceY.value + textM.value.height * TEXT_HEIGHT_OFFSET_MULT,
   );
 
   const pan = Gesture.Pan()
