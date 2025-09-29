@@ -15,9 +15,9 @@ type Props = {
 
 const PLRangeSlider = ({
   min = -100,
-  max = 200,
+  max = 100,
   step = 0.5,
-  initial = [-100, 200],
+  initial = [-100, 100],
   onChange,
 }: Props) => {
   const [values, setValues] = React.useState<[number, number]>(initial);
@@ -36,7 +36,7 @@ const PLRangeSlider = ({
   return (
     <Box paddingVertical="s" position="relative" onLayout={onLayout}>
       <LinearGradient
-        colors={["red", "white", "green", "green"]}
+        colors={["red", "white", "green"]}
         starts={{ x: 0, y: 0 }}
         ends={{ x: 1, y: 0 }}
         position="absolute"

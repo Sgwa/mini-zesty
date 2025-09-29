@@ -25,7 +25,7 @@ const PillMarker = ({ value, tint }: { value: number; tint: Colors }) => {
       shadowOpacity={0.25}
       shadowRadius={8}
     >
-      {percentage !== "+200%" ? (
+      {percentage !== "+100%" ? (
         <Text variant="h5">{percentage}</Text>
       ) : (
         <Box flexDirection="row" justifyContent="center" alignItems="center">
