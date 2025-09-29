@@ -11,6 +11,8 @@ interface GetPathProps {
   minPrice?: number;
 }
 
+const Y_OFFSET = 10;
+
 export const getPath = ({
   data,
   width,
@@ -43,7 +45,7 @@ export const getPath = ({
     const x = (index / Math.max(1, data.length - 1)) * width;
     const y = height - ((dayData.close - minValue) / range) * height;
     xCoords.push(x);
-    yCoords.push(y);
+    yCoords.push(y + Y_OFFSET);
   });
 
   path.moveTo(xCoords[0], yCoords[0]);

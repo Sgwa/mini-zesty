@@ -32,6 +32,7 @@ const PRICE_Y_OFFSET = 50;
 const TEMPORALITY = ["1D", S.ticker.week_temp, "1M", "2M"];
 const TEMP_LENGTHS = [2, 8, 31, 60];
 const TEXT_HEIGHT_OFFSET_MULT = Platform.OS === "android" ? 1.3 : 1.1;
+const CANVAS_OFFSET = 20;
 
 const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   const [tempIdx, setTempIdx] = useState(3);
@@ -191,7 +192,7 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   return (
     <>
       <GestureDetector gesture={pan}>
-        <Canvas style={{ width, height: height + 10 }}>
+        <Canvas style={{ width, height: height + CANVAS_OFFSET }}>
           <Group>
             {xCoords.length > 0 && (
               <>
@@ -228,8 +229,12 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
               <Line p1={lineP1} p2={lineP2} strokeWidth={2} color={colors.secondary}>
                 <DashPathEffect intervals={[6, 4]} />
               </Line>
-              <Circle cx={markerX} cy={investedY} r={5} color={colors.gray30} />
-              <Circle cx={markerX} cy={investedY} r={3} color={colors.gray10} />
+              {!!investedData && (
+                <>
+                  <Circle cx={markerX} cy={investedY} r={5} color={colors.gray30} />
+                  <Circle cx={markerX} cy={investedY} r={3} color={colors.gray10} />
+                </>
+              )}
               <Circle cx={markerX} cy={markerY} r={5} color={colors.primary} />
               <Circle cx={markerX} cy={markerY} r={3} color={colors.secondary} />
               <RoundedRect
