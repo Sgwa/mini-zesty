@@ -33,6 +33,10 @@ const TEMPORALITY = ["1D", S.ticker.week_temp, "1M", "2M"];
 const TEMP_LENGTHS = [2, 8, 31, 60];
 const TEXT_HEIGHT_OFFSET_MULT = Platform.OS === "android" ? 1.3 : 1.1;
 const CANVAS_OFFSET = 20;
+const TEXT = {
+  value: S.graph.value.toString(),
+  invested: S.graph.invested.toString(),
+};
 
 const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   const [tempIdx, setTempIdx] = useState(3);
@@ -113,13 +117,14 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   const fontPrice = matchFont(fontPriceStyle);
   const textM = useDerivedValue(() => {
     const textDateM = fontDate.measureText(String(marker.value.date));
-    const textPriceM = fontPrice.measureText(
-      "Valor actual: " + String(marker.value.price),
+    const textPriceM = fontPrice.measureText(TEXT.value + String(marker.value.price));
+    const textPriceI = fontPrice.measureText(
+      TEXT.invested + String(investedMarker.value.price),
     );
     return {
       ...{
         ...textDateM,
-        width: textPriceM.width > textDateM.width ? textPriceM.width : textDateM.width,
+        width: Math.max(textDateM.width, Math.max(textPriceM.width, textPriceI.width)),
       },
       ...fontDate.getMetrics(),
     };
@@ -128,8 +133,8 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   const markerX = useDerivedValue(() => marker.value.x);
   const markerY = useDerivedValue(() => marker.value.y);
   const investedY = useDerivedValue(() => investedMarker.value.y);
-  const markerPrice = useDerivedValue(() => "Valor actual: " + marker.value.price);
-  const investedPrice = useDerivedValue(() => "Invertido: " + investedMarker.value.price);
+  const markerPrice = useDerivedValue(() => TEXT.value + marker.value.price);
+  const investedPrice = useDerivedValue(() => TEXT.invested + investedMarker.value.price);
   const markerDate = useDerivedValue(() => marker.value.date);
   const lineP1 = useDerivedValue(() => ({ x: marker.value.x, y: 0 }));
   const lineP2 = useDerivedValue(() => ({ x: marker.value.x, y: height }));
@@ -149,7 +154,7 @@ const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   );
   const textX = useDerivedValue(() => {
     const x = marker.value.x - textM.value.width / 2;
-    return Math.max(20, Math.min(x, width - textM.value.width - 20));
+    return Math.max(15, Math.min(x, width - textM.value.width - 15));
   });
   const textY = useDerivedValue(
     () =>

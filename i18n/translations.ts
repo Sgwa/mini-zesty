@@ -78,6 +78,14 @@ const translations: Translations = {
     en: "Explore",
     es: "Explorar",
   },
+  [AppStrings.graph.value]: {
+    en: "Value: ",
+    es: "Valor: ",
+  },
+  [AppStrings.graph.invested]: {
+    en: "Invested: ",
+    es: "Invertido: ",
+  },
 };
 
 export default translations;

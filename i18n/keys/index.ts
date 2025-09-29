@@ -2,6 +2,7 @@ import Home from "i18n/keys/modules/Home";
 import Ticker from "i18n/keys/modules/Ticker";
 import Filter from "i18n/keys/modules/Filter";
 import BottomBar from "i18n/keys/modules/BottomBar";
+import Graph from "i18n/keys/modules/graph";
 import { IntersectWithArgsTypeWithStringPrimitive } from "i18n/keys/types";
 
 const AppStrings = {
@@ -9,6 +10,7 @@ const AppStrings = {
   ticker: Ticker,
   filter: Filter,
   bottom_bar: BottomBar,
+  graph: Graph,
 };
 
 const AppStringsIntersected = AppStrings as IntersectWithArgsTypeWithStringPrimitive<
