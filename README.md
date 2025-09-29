@@ -33,9 +33,15 @@ npm install
 node ws-mock.js
 ```
 
-Esto levanta el servidor en `ws://localhost:8081`.
+Esto levanta el servidor en `ws://localhost:8082`.
 
-### 4. Hacer un dev build
+### 4. Crear .env con variable EXPO_PUBLIC_WS_URL
+> ⚠️ Se debe usar la IP local del pc, no `localhost`
+``` bash
+EXPO_PUBLIC_WS_URL=ws://[ip-local-pc]:8082
+```
+
+### 5. Hacer un dev build (primera vez)
 
 #### Android
 > Debe tener conectado el dispositivo y tener instalado Java 17
@@ -49,6 +55,11 @@ yarn android -d
 ``` bash
 npx expo prebuild -p ios --clean
 yarn ios -d
+```
+
+### 6. Correr la aplicación las siguientes veces
+``` bash
+yarn start
 ```
 
 ------------------------------------------------------------------------
