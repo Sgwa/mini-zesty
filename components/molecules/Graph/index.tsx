@@ -22,7 +22,8 @@ import { GroupButtons } from "components/atoms";
 import S from "i18n";
 
 interface Props {
-  tickerHData: DayData[] | undefined;
+  marketData: DayData[] | undefined;
+  investedData?: DayData[];
   height?: number;
   width?: number;
 }
@@ -31,31 +32,66 @@ const PRICE_Y_OFFSET = 50;
 const TEMPORALITY = ["1D", S.ticker.week_temp, "1M", "2M"];
 const TEMP_LENGTHS = [2, 8, 31, 60];
 
-const Graph = ({ tickerHData, width: w, height: h }: Props) => {
+const Graph = ({ marketData, investedData, width: w, height: h }: Props) => {
   const [tempIdx, setTempIdx] = useState(3);
   const opacity = useSharedValue(0);
   const { width: windowWidth } = useWindowDimensions();
   const width = w || windowWidth * 0.9;
   const height = h || windowWidth * 0.6;
 
-  const getData = useCallback(() => {
-    if (tickerHData === undefined) return [];
-    const slice = [tickerHData.length - TEMP_LENGTHS[tempIdx], undefined];
-    return tickerHData.slice(slice[0], slice[1]) ?? [];
-  }, [tempIdx, tickerHData]);
+  const getMarketData = useCallback(() => {
+    if (marketData === undefined) return [];
+    const slice = [marketData.length - TEMP_LENGTHS[tempIdx], undefined];
+    return marketData.slice(slice[0], slice[1]) ?? [];
+  }, [tempIdx, marketData]);
+
+  const getInvestedData = useCallback(() => {
+    if (investedData === undefined) return [];
+    const slice = [investedData.length - TEMP_LENGTHS[tempIdx], undefined];
+    return investedData.slice(slice[0], slice[1]) ?? [];
+  }, [tempIdx, investedData]);
 
   const touchX = useSharedValue(0);
   const touchY = useSharedValue(0);
+  const data = getMarketData();
+  const maxPrice = Math.max(...data.map(dayData => dayData.high));
+  const minPrice = Math.min(...data.map(dayData => dayData.low));
   const { path, areaPath, xCoords, yCoords, prices, dates } = useMemo(
-    () => getPath({ data: getData(), width, height }),
-    [getData, width, height],
+    () => getPath({ data, width, height }),
+    [data, width, height],
+  );
+  const {
+    path: investedPath,
+    prices: investedPrices,
+    xCoords: investedXCoords,
+    yCoords: investedYCoords,
+    dates: investedDates,
+  } = useMemo(
+    () => getPath({ data: getInvestedData(), width, height, maxPrice, minPrice }),
+    [getInvestedData, width, height, maxPrice, minPrice],
   );
   const pathPoints = useSharedValue({ xCoords, yCoords, prices, dates });
+  const investedPathPoints = useSharedValue({
+    xCoords: investedXCoords,
+    yCoords: investedYCoords,
+    prices: investedPrices,
+    dates: investedDates,
+  });
 
   useEffect(() => {
     pathPoints.value = { xCoords, yCoords, prices, dates };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xCoords, yCoords]);
+
+  useEffect(() => {
+    investedPathPoints.value = {
+      xCoords: investedXCoords,
+      yCoords: investedYCoords,
+      prices: investedPrices,
+      dates: investedDates,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [investedXCoords, investedYCoords]);
 
   const fontFamily = Platform.select({ ios: "Helvetica", default: "serif" });
   const fontDateStyle = {
@@ -68,11 +104,16 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
     fontWeight: "500" as const,
   };
   const marker = useDerivedValue(() => getIntersection({ pathPoints, touchX }));
+  const investedMarker = useDerivedValue(() =>
+    getIntersection({ pathPoints: investedPathPoints, touchX }),
+  );
   const fontDate = matchFont(fontDateStyle);
   const fontPrice = matchFont(fontPriceStyle);
   const textM = useDerivedValue(() => {
     const textDateM = fontDate.measureText(String(marker.value.date));
-    const textPriceM = fontPrice.measureText(String(marker.value.price));
+    const textPriceM = fontPrice.measureText(
+      "Valor actual: " + String(marker.value.price),
+    );
     return {
       ...{
         ...textDateM,
@@ -84,13 +125,15 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
 
   const markerX = useDerivedValue(() => marker.value.x);
   const markerY = useDerivedValue(() => marker.value.y);
-  const markerPrice = useDerivedValue(() => marker.value.price);
+  const investedY = useDerivedValue(() => investedMarker.value.y);
+  const markerPrice = useDerivedValue(() => "Valor actual: " + marker.value.price);
+  const investedPrice = useDerivedValue(() => "Invertido: " + investedMarker.value.price);
   const markerDate = useDerivedValue(() => marker.value.date);
   const lineP1 = useDerivedValue(() => ({ x: marker.value.x, y: 0 }));
   const lineP2 = useDerivedValue(() => ({ x: marker.value.x, y: height }));
   const rectWidth = useDerivedValue(() => textM.value.width * 1.2);
   const rectHeight = useDerivedValue(
-    () => (textM.value.ascent - textM.value.descent) * 2.7,
+    () => (textM.value.ascent - textM.value.descent) * (investedData ? 3.7 : 2.7),
   );
   const rectX = useDerivedValue(() => {
     const x = marker.value.x - (textM.value.width * 1.2) / 2;
@@ -100,11 +143,11 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
     () =>
       marker.value.y +
       (marker.value.y > height / 2 ? -PRICE_Y_OFFSET : PRICE_Y_OFFSET) -
-      (textM.value.ascent - textM.value.descent),
+      (textM.value.ascent - textM.value.descent) * (investedData ? 2 : 1),
   );
   const textX = useDerivedValue(() => {
     const x = marker.value.x - textM.value.width / 2;
-    return Math.max(3, Math.min(x, width - textM.value.width - 3));
+    return Math.max(20, Math.min(x, width - textM.value.width - 20));
   });
   const textY = useDerivedValue(
     () =>
@@ -113,6 +156,9 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
       7,
   );
   const textPriceY = useDerivedValue(() => textY.value + textM.value.height * 1.1);
+  const textInvestedY = useDerivedValue(
+    () => textPriceY.value + textM.value.height * 1.1,
+  );
 
   const pan = Gesture.Pan()
     .onBegin(e => {
@@ -142,10 +188,19 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
   return (
     <>
       <GestureDetector gesture={pan}>
-        <Canvas style={{ width, height }}>
+        <Canvas style={{ width, height: height + 10 }}>
           <Group>
             {xCoords.length > 0 && (
               <>
+                <Path
+                  path={investedPath}
+                  style="stroke"
+                  strokeJoin="round"
+                  strokeWidth={1.5}
+                  color={colors.gray20}
+                >
+                  <DashPathEffect intervals={[6, 1]} />
+                </Path>
                 <Path path={areaPath} style="fill">
                   <LinearGradient
                     start={vec(0, 0)}
@@ -170,6 +225,8 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
               <Line p1={lineP1} p2={lineP2} strokeWidth={2} color={colors.secondary}>
                 <DashPathEffect intervals={[6, 4]} />
               </Line>
+              <Circle cx={markerX} cy={investedY} r={5} color={colors.gray30} />
+              <Circle cx={markerX} cy={investedY} r={3} color={colors.gray10} />
               <Circle cx={markerX} cy={markerY} r={5} color={colors.primary} />
               <Circle cx={markerX} cy={markerY} r={3} color={colors.secondary} />
               <RoundedRect
@@ -177,7 +234,7 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
                 y={rectY}
                 width={rectWidth}
                 height={rectHeight}
-                color={colors.secondary}
+                color={colors.gray10}
                 r={4}
               />
               <SkText
@@ -185,15 +242,24 @@ const Graph = ({ tickerHData, width: w, height: h }: Props) => {
                 y={textY}
                 text={markerDate}
                 font={fontDate}
-                color={colors.primary}
+                color={colors.black}
               />
               <SkText
                 x={textX}
                 y={textPriceY}
                 text={markerPrice}
                 font={fontPrice}
-                color={colors.primary}
+                color={colors.black}
               />
+              {!!investedData && (
+                <SkText
+                  x={textX}
+                  y={textInvestedY}
+                  text={investedPrice}
+                  font={fontDate}
+                  color={colors.gray30}
+                />
+              )}
             </Group>
           </Group>
         </Canvas>

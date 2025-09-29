@@ -6,8 +6,9 @@ const palette = {
   grayscale: {
     10: "#dedee2",
     20: "#787780",
+    30: "#565656",
     black: "#000000",
-    white: "#FFFFFF",
+    white: "#ffffff",
   },
   transparent: "#00000000",
 };

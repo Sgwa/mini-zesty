@@ -66,7 +66,7 @@ const PortfolioCard = ({ portfolio }: Props) => {
           {S.ticker.pl_total}
         </Text>
         <Text variant="h5R" color="gray20">
-          {S.ticker.pl_today}k
+          {S.ticker.pl_today}
         </Text>
       </Box>
       <Box alignItems="flex-end">

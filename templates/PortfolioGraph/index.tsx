@@ -10,8 +10,8 @@ interface Props {
 const PortfolioGraph = ({ portfolio }: Props) => {
   const history = useTickerStore(state => state.history);
   if (!history) return null;
-  const totalHData = buildPortfolioDayData(history?.data, portfolio.positions);
-  return <Graph tickerHData={totalHData} />;
+  const { market, invested } = buildPortfolioDayData(history?.data, portfolio.positions);
+  return <Graph marketData={market} investedData={invested} />;
 };
 
 export default PortfolioGraph;

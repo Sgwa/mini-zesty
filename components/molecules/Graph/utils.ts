@@ -7,9 +7,18 @@ interface GetPathProps {
   width: number;
   height: number;
   baselineY?: number;
+  maxPrice?: number;
+  minPrice?: number;
 }
 
-export const getPath = ({ data, width, height, baselineY = height }: GetPathProps) => {
+export const getPath = ({
+  data,
+  width,
+  height,
+  baselineY = height,
+  maxPrice,
+  minPrice,
+}: GetPathProps) => {
   const path = Skia.Path.Make();
   const areaPath = Skia.Path.Make();
   if (!data.length)
@@ -22,9 +31,9 @@ export const getPath = ({ data, width, height, baselineY = height }: GetPathProp
       dates: [] as string[],
     };
 
-  const maxPrice = Math.max(...data.map(dayData => dayData.high));
-  const minPrice = Math.min(...data.map(dayData => dayData.low));
-  const range = maxPrice - minPrice || 1;
+  const maxValue = maxPrice || Math.max(...data.map(dayData => dayData.high));
+  const minValue = minPrice || Math.min(...data.map(dayData => dayData.low));
+  const range = maxValue - minValue || 1;
 
   const xCoords: number[] = [];
   const yCoords: number[] = [];
@@ -32,7 +41,7 @@ export const getPath = ({ data, width, height, baselineY = height }: GetPathProp
   const dates = data.map(dayData => dayData.date) || [];
   data.forEach((dayData, index) => {
     const x = (index / Math.max(1, data.length - 1)) * width;
-    const y = height - ((dayData.close - minPrice) / range) * height;
+    const y = height - ((dayData.close - minValue) / range) * height;
     xCoords.push(x);
     yCoords.push(y);
   });

@@ -48,12 +48,12 @@ const TickerPage = ({ tickerSymbol }: Props) => {
               {changePercent.toFixed(2)}%]
             </Text>
           </Box>
-          <Graph tickerHData={ticketHistory} />
+          <Graph marketData={ticketHistory} />
         </Box>
         {positionsQty && (
           <Box gap="s">
             <Text variant="h3">{S.ticker.position.title}</Text>
-            <Box flexDirection="row" gap="xxl">
+            <Box width="80%" flexDirection="row" justifyContent="space-between">
               <Box gap="m">
                 <Box>
                   <Text variant="h5R" color="black">

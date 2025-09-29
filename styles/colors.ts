@@ -7,6 +7,7 @@ const colors = {
   red: palette.red,
   gray10: palette.grayscale[10],
   gray20: palette.grayscale[20],
+  gray30: palette.grayscale[30],
   black: palette.grayscale.black,
   white: palette.grayscale.white,
   transparent: palette.transparent,

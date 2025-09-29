@@ -68,13 +68,15 @@ async function build() {
 
   const positions = symbols
     .flatMap(symbol => {
-      const dayData = getRandom(history.data[symbol] || []);
-      return range(2).map(() => ({
-        symbol,
-        qty: getRandomNumber(0, 5),
-        date: dayData?.date ?? "",
-        buyPrice: dayData ? getRandomNumber(dayData.low ?? 0, dayData.high ?? 0) : 0,
-      }));
+      return range(2).map(() => {
+        const dayData = getRandom(history.data[symbol] || []);
+        return {
+          symbol,
+          qty: getRandomNumber(0, 5),
+          date: dayData?.date ?? "",
+          buyPrice: dayData ? getRandomNumber(dayData.low ?? 0, dayData.high ?? 0) : 0,
+        };
+      });
     })
     .filter(p => p.date !== "");
 
